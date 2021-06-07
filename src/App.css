@@ -14,12 +14,31 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #141616;
 }
 
+main {
+  margin-top: 5em;
+  
+}
 
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@1,300&display=swap');
+.center {
+  justify-content: center;
+  padding: 10px;
+  
+}
 
-*{
-  font-family: 'Merriweather', serif;
+.ui.search input {
+  width: 100%;
+  border-radius: 0 !important;
+}
+
+.item {
+  padding: 15px 0px !important;
+}
+
+i.icon {
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
 }
