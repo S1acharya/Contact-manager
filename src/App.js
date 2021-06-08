@@ -1,38 +1,56 @@
 import React, { useState, useEffect } from "react";
-// import { uuid } from "uuidv4";
 import './App.css';
-import AddContact from './AddContact';
-import ContactList from './ContactList';
+import {db} from "./firebase_Config";
+import firebase from "firebase";
+// import ContactList from './ContactList';
 
 function App() {
-  // const LOCAL_STORAGE_KEY = "contacts";
   const [contacts, setContacts] = useState([]);
+  const [nameInput , setnameInput] = useState(" ");
+  const [emailInput , setemailInput] = useState(" ");
 
-  const addContactHandler = (contact) => {
-    // console.log(contact);
-    setContacts([...contacts, { ...contact}]);
-  };
+  // const removeContactHandler = (id) => {
+  //   const newContactList = contacts.filter((contact) => {
+  //     return contact.id !== id;
+  //   });
 
-  const removeContactHandler = (id) => {
-    const newContactList = contacts.filter((contact) => {
-      return contact.id !== id;
+  //   setContacts(newContactList);
+  // };
+
+
+  function addcontact(e) {
+    e.preventDefault();
+    if (nameInput === "" || emailInput === "") {
+      alert("ALl the fields are mandatory!");
+      return;
+    }
+    db
+    .collection("contacts")
+    .add({
+      name:nameInput,
+      email:emailInput,
+    })
+    setnameInput("");
+    setemailInput("");
+  }
+ 
+  useEffect(() => {
+    getContacts();
+  }, [])  //blank to run only on first launch
+
+  function getContacts() {
+    db
+    .collection("contactcs")
+    .onSnapshot(function (querySnapshot) {
+      setContacts(
+        querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          email: doc.data().email,
+        }))
+      );
     });
-
-    setContacts(newContactList);
-  };
-
-  // useEffect(() => {
-  //   const retriveContacts = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-  //   if (retriveContacts) setContacts(retriveContacts);
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(contacts));
-  // }, [contacts]);
-
-
-
-
+  }
 
   return (
     <div className="ui container" >
@@ -43,8 +61,41 @@ function App() {
         </div>
       </div>
       <p></p>
-      <AddContact addContactHandler={addContactHandler} />
-      <ContactList contacts={contacts} getContactId={removeContactHandler} />
+
+      {/* add contacts to firebase*/}
+      <div className="ui main">
+        <h2>Add Contact</h2>
+        <form className="ui form">
+          <div className="field">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={nameInput}
+              onChange={(e) => {
+                setnameInput(e.target.value);
+              }}
+            />
+          </div>
+          <div className="field">
+            <label>Email</label>
+            <input
+              type="text"
+              name="email"
+              placeholder="Email"
+              value={emailInput}
+              onChange={(e) => {
+                setemailInput(e.target.value);
+              }}
+            />
+          </div>
+          <button type = "submit" className="ui button blue" onClick = {addcontact}>Add!</button>
+        </form>
+      </div>
+
+    {/* fetch the data and show on screen */}
+      {/* <ContactList contacts={contacts} getContactId={removeContactHandler} /> */}
     </div>
   );
 }
