@@ -2,22 +2,13 @@ import React, { useState, useEffect } from "react";
 import './App.css';
 import {db} from "./firebase_Config";
 import firebase from "firebase";
-// import ContactList from './ContactList';
+import ContactsListItem from "./ContactsList";
 
 function App() {
   const [contacts, setContacts] = useState([]);
   const [nameInput , setnameInput] = useState(" ");
   const [emailInput , setemailInput] = useState(" ");
-
-  // const removeContactHandler = (id) => {
-  //   const newContactList = contacts.filter((contact) => {
-  //     return contact.id !== id;
-  //   });
-
-  //   setContacts(newContactList);
-  // };
-
-
+  
   function addcontact(e) {
     e.preventDefault();
     if (nameInput === "" || emailInput === "") {
@@ -57,7 +48,7 @@ function App() {
 
       <div className="ui fixed menu">
         <div className="ui container center">
-          <h2>Contact Manager</h2>
+          <h2>Contact Manager 🔥</h2>
         </div>
       </div>
       <p></p>
@@ -94,8 +85,17 @@ function App() {
         </form>
       </div>
 
-    {/* fetch the data and show on screen */}
-      {/* <ContactList contacts={contacts} getContactId={removeContactHandler} /> */}
+      {/* fetch the data and show on screen */}
+      <div>
+        {contacts.map((contact) => (
+          // in contactsList.js , we define a function and we pass these 3 arguments
+          <ContactsListItem
+            name={contact.name}
+            email={contact.email}
+            id={contact.id}
+          />
+        ))}
+      </div>
     </div>
   );
 }
